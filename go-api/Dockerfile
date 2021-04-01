@@ -12,5 +12,5 @@ RUN go mod download
 
 COPY . .
 
-ENTRYPOINT CompileDaemon --build="go build ./server.go"
+ENTRYPOINT CompileDaemon --build="go build server.go"
 

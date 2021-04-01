@@ -9,11 +9,11 @@ services:
     ports: 
       - 8080:8080
     volumes: 
-      - ./go-api/app:/usr/app
+      - ./go-api:/usr/app
     depends_on: 
         - go-api-db
     env_file: 
-        - ./go-api/app/config/.env
+        - ./go-api/config/.env
   go-api-db:
     image: mysql/mysql-server
     container_name: go-api-db

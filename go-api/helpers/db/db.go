@@ -5,7 +5,7 @@ import (
     "database/sql"
     "github.com/jmoiron/sqlx"
     "github.com/sirupsen/logrus"
-    config "github.com/whuangz/go-example/go-api/app/config"	
+    config "github.com/whuangz/go-example/go-api/config"	
 )
 
 func init() {

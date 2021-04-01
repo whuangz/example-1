@@ -5,14 +5,16 @@ import "os"
 type ConfigType struct {
 	Uri string
 	IsDebugMode bool
+	Port string
 }
 
 var Config ConfigType
 
 func init(){
 	Config = ConfigType{
-		Uri: "8080",
+		Uri: getEnv("URI"),
 		IsDebugMode: true,
+		Port: getEnv("PORT"),
 	}
 }
 

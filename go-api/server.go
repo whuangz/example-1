@@ -1,10 +1,11 @@
 package main
 
 import (
-	"fmt"
-	_ "github.com/whuangz/go-example/go-api/helpers/db"	
+	_ "github.com/whuangz/go-example/go-api/routers"
+	"github.com/whuangz/go-example/go-api/engine"
+
 )
 
 func main() {
-	fmt.Println("Running tets")
+	engine.Connect()
 }

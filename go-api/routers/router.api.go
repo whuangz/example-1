@@ -5,12 +5,11 @@ import (
 	"github.com/whuangz/go-example/go-api/engine"
 )
 
-
 func init() {
 
-	engine.Router.GET("/ping", func(c *gin.Context) {
+	engine.Router.GET("/healthcheck", func(c *gin.Context) {
 		c.JSON(200, gin.H{
-			"message": "pong",
+			"message": "I m good",
 		})
 	})
 
@@ -21,6 +20,6 @@ func init() {
 				"message": "pong",
 			})
 		})
-		
+
 	}
 }

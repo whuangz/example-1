@@ -2,25 +2,21 @@ package config
 
 import "os"
 
-type ConfigType struct {
-	Uri string
-	IsDebugMode bool
-	Port string
+var (
+	URI           string
+	IS_DEBUG_MODE bool
+	PORT          string
+)
+
+func init() {
+	URI = getEnv("URI", "")
+	IS_DEBUG_MODE = true
+	PORT = getEnv("PORT", ":8080")
 }
 
-var Config ConfigType
-
-func init(){
-	Config = ConfigType{
-		Uri: getEnv("URI"),
-		IsDebugMode: true,
-		Port: getEnv("PORT"),
-	}
-}
-
-func getEnv(key string) string {
+func getEnv(key string, defaultValue string) string {
 	if value, ok := os.LookupEnv(key); ok {
 		return value
 	}
-	return ""
+	return defaultValue
 }

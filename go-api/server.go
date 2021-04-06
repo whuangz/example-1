@@ -1,11 +1,9 @@
 package main
 
 import (
-	_ "github.com/whuangz/go-example/go-api/routers"
-	"github.com/whuangz/go-example/go-api/engine"
-
+	"github.com/whuangz/go-example/go-api/router"
 )
 
 func main() {
-	engine.Connect()
+	router.Routing()
 }

@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 
+	_ "github.com/go-sql-driver/mysql"
+
 	"github.com/jmoiron/sqlx"
 	"github.com/sirupsen/logrus"
 	config "github.com/whuangz/go-example/go-api/config"
@@ -28,10 +30,10 @@ func connect(dataSource string) *sqlx.DB {
 
 	if err != nil {
 		logrus.Error(err)
+		return nil
 	} else {
 		return conn
 	}
-	return nil
 }
 
 // Transaction is an interface that models the standard transaction in

@@ -15,4 +15,6 @@ migrate-down:
 	@docker exec go-api goose -dir ./migrations/sql mysql \
 	 "$(MYSQL_USER):$(MYSQL_PASSWORD)@tcp($(MYSQL_ADDRESS))/$(MYSQL_DATABASE)?parseTime=true" down
 
-#docker exec go-api goose -dir ./migrations/sql create post sql
+.PHONY: test
+test:
+	@docker exec go-api go test -v -short -race ./...

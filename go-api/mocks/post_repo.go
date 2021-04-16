@@ -19,7 +19,9 @@ func (m *MockPostRepo) Save(ctx context.Context, post *domain.Post) error {
 	if rf, ok := ret.Get(0).(func(context.Context, *domain.Post) error); ok {
 		r0 = rf(ctx, post)
 	} else {
-		r0 = ret.Error(0)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(error)
+		}
 	}
 
 	return r0
@@ -42,20 +44,61 @@ func (m *MockPostRepo) FindAll(ctx context.Context) ([]domain.Post, error) {
 	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
 		r1 = rf(ctx)
 	} else {
-		r1 = ret.Error(1)
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(error)
+		}
 	}
 
 	return r0, r1
 }
 
-func (m *MockPostRepo) FindByID(ctx context.Context, id uint32) (domain.Post, error) {
-	return domain.Post{}, nil
+func (m *MockPostRepo) FindByID(ctx context.Context, id int32) (domain.Post, error) {
+	ret := m.Called(ctx, id)
+
+	var r0 domain.Post
+	if rf, ok := ret.Get(0).(func(context.Context, int32) domain.Post); ok {
+		r0 = rf(ctx, id)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(domain.Post)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, int32) error); ok {
+		r1 = rf(ctx, id)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(error)
+		}
+	}
+	return r0, r1
 }
 
-func (m *MockPostRepo) Update(ctx context.Context, id uint32, post *domain.Post) error {
-	return nil
+func (m *MockPostRepo) Update(ctx context.Context, id int32, post *domain.Post) error {
+	ret := m.Called(ctx, id, post)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, int32, *domain.Post) error); ok {
+		r0 = rf(ctx, id, post)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(error)
+		}
+	}
+	return r0
 }
 
-func (m *MockPostRepo) Delete(ctx context.Context, id uint32) (int32, error) {
-	return 0, nil
+func (m *MockPostRepo) Delete(ctx context.Context, id int32) error {
+	ret := m.Called(ctx, id)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, int32) error); ok {
+		r0 = rf(ctx, id)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(error)
+		}
+	}
+	return r0
 }

@@ -15,7 +15,10 @@ func NewPostHandler(router *gin.Engine, service domain.PostService) {
 	postGroup := router.Group("posts")
 	{
 		postGroup.GET("", handler.getPosts)
-		//blogsGroup.POST("/", handler.createBlog)
+		postGroup.POST("", handler.createPost)
+		postGroup.GET("/:post_id", handler.getPostByID)
+		postGroup.PATCH("/:post_id", handler.updatePost)
+		postGroup.DELETE("/:post_id", handler.deletePost)
 	}
 }
 
@@ -33,20 +36,80 @@ func (p *postHandler) getPosts(c *gin.Context) {
 	c.JSON(200, posts)
 }
 
-// func (p *postHandler) createBlog(c *gin.Context) {
+func (p *postHandler) createPost(c *gin.Context) {
+	var req domain.Post
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+		c.JSON(422, gin.H{
+			"message": err.Error(),
+		})
+		c.Abort()
+		return
+	}
 
-// 	postJSON := domain.Post{
-// 		Title:   "test golang",
-// 		Content: "test golang content",
-// 	}
+	err = p.service.Save(c, &req)
 
-// 	// if err != nil {
-// 	// 	c.JSON(400, gin.H{
-// 	// 		"message": "Oops",
-// 	// 	})
-// 	// 	c.Abort()
-// 	// 	return
-// 	// }
+	if err != nil {
+		c.JSON(domain.Status(err), gin.H{
+			"message": err.Error(),
+		})
+		c.Abort()
+		return
+	}
 
-// 	c.JSON(200, &postJSON)
-// }
+	c.JSON(200, &req)
+}
+
+func (p *postHandler) getPostByID(c *gin.Context) {
+	if postId, ok := getPathInt(c, "post_id"); ok {
+
+		post, err := p.service.FindByID(c, int32(postId))
+
+		if err != nil {
+			c.JSON(domain.Status(err), gin.H{
+				"message": err.Error(),
+			})
+			c.Abort()
+			return
+		}
+
+		c.JSON(200, post)
+	}
+}
+
+func (p *postHandler) updatePost(c *gin.Context) {
+	if postId, ok := getPathInt(c, "post_id"); ok {
+
+		var req domain.Post
+		if ok := bindData(c, &req); !ok {
+			return
+		}
+		err := p.service.Update(c, int32(postId), &req)
+
+		if err != nil {
+			c.JSON(domain.Status(err), gin.H{
+				"message": err.Error(),
+			})
+			c.Abort()
+			return
+		}
+
+		c.JSON(200, &req)
+	}
+}
+
+func (p *postHandler) deletePost(c *gin.Context) {
+	if postId, ok := getPathInt(c, "post_id"); ok {
+		err := p.service.Delete(c, int32(postId))
+
+		if err != nil {
+			c.JSON(domain.Status(err), gin.H{
+				"message": err.Error(),
+			})
+			c.Abort()
+			return
+		}
+
+		c.JSON(200, "success deleted")
+	}
+}

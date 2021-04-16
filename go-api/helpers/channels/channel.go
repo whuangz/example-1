@@ -1,13 +1,11 @@
 package channels
 
-func OK(done chan bool) bool {
+func OK(channel chan bool) bool {
 	select {
-	case ok := <-done:
+	case ok := <-channel:
 		if ok {
 			return ok
 		}
-	default:
-		return false
 	}
 	return false
 }

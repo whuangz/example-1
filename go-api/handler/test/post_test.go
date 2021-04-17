@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/whuangz/go-example/go-api/domain"
 	"github.com/whuangz/go-example/go-api/handler"
-	"github.com/whuangz/go-example/go-api/mocks"
+	mocks "github.com/whuangz/go-example/go-api/mocks/post"
 )
 
 func TestGetPosts(t *testing.T) {
@@ -44,7 +44,7 @@ func TestGetPosts(t *testing.T) {
 		router := gin.New()
 		handler.NewPostHandler(router, mockService)
 
-		req, err := http.NewRequest(http.MethodGet, "/posts", nil)
+		req, err := http.NewRequest(http.MethodGet, "/api/post", nil)
 		assert.NoError(t, err)
 
 		router.ServeHTTP(rec, req)
@@ -64,7 +64,7 @@ func TestGetPosts(t *testing.T) {
 		router := gin.New()
 		handler.NewPostHandler(router, mockService)
 
-		req, err := http.NewRequest(http.MethodGet, "/posts", nil)
+		req, err := http.NewRequest(http.MethodGet, "/api/post", nil)
 		assert.NoError(t, err)
 
 		router.ServeHTTP(rec, req)
@@ -99,7 +99,7 @@ func TestSavePost(t *testing.T) {
 		router := gin.New()
 		handler.NewPostHandler(router, mockService)
 
-		req, err := http.NewRequest(http.MethodPost, "/posts", strings.NewReader(string(j)))
+		req, err := http.NewRequest(http.MethodPost, "/api/post", strings.NewReader(string(j)))
 		assert.NoError(t, err)
 
 		router.ServeHTTP(rec, req)
@@ -128,7 +128,7 @@ func TestSavePost(t *testing.T) {
 		router := gin.New()
 		handler.NewPostHandler(router, mockService)
 
-		req, err := http.NewRequest(http.MethodPost, "/posts", strings.NewReader(string(j)))
+		req, err := http.NewRequest(http.MethodPost, "/api/post", strings.NewReader(string(j)))
 		assert.NoError(t, err)
 
 		router.ServeHTTP(rec, req)
@@ -163,7 +163,7 @@ func TestFindPostByID(t *testing.T) {
 		router := gin.New()
 		handler.NewPostHandler(router, mockService)
 
-		req, err := http.NewRequest(http.MethodGet, "/posts/1", nil)
+		req, err := http.NewRequest(http.MethodGet, "/api/post/1", nil)
 		assert.NoError(t, err)
 
 		router.ServeHTTP(rec, req)
@@ -184,7 +184,7 @@ func TestFindPostByID(t *testing.T) {
 		router := gin.New()
 		handler.NewPostHandler(router, mockService)
 
-		req, err := http.NewRequest(http.MethodGet, "/posts/0", nil)
+		req, err := http.NewRequest(http.MethodGet, "/api/post/0", nil)
 
 		assert.NoError(t, err)
 
@@ -218,7 +218,7 @@ func TestUpdatePost(t *testing.T) {
 		router := gin.New()
 		handler.NewPostHandler(router, mockService)
 
-		req, err := http.NewRequest(http.MethodPatch, "/posts/1", strings.NewReader(string(j)))
+		req, err := http.NewRequest(http.MethodPatch, "/api/post/1", strings.NewReader(string(j)))
 		req.Header.Add("Content-Type", "application/json")
 
 		assert.NoError(t, err)
@@ -240,7 +240,7 @@ func TestUpdatePost(t *testing.T) {
 		router := gin.New()
 		handler.NewPostHandler(router, mockService)
 
-		req, err := http.NewRequest(http.MethodPatch, "/posts/", nil)
+		req, err := http.NewRequest(http.MethodPatch, "/api/post/", nil)
 		req.Header.Add("Content-Type", "application/json")
 
 		assert.NoError(t, err)
@@ -265,7 +265,7 @@ func TestDeletePost(t *testing.T) {
 		router := gin.New()
 		handler.NewPostHandler(router, mockService)
 
-		req, err := http.NewRequest(http.MethodDelete, "/posts/1", nil)
+		req, err := http.NewRequest(http.MethodDelete, "/api/post/1", nil)
 		assert.NoError(t, err)
 		router.ServeHTTP(rec, req)
 
@@ -284,7 +284,7 @@ func TestDeletePost(t *testing.T) {
 		router := gin.New()
 		handler.NewPostHandler(router, mockService)
 
-		req, err := http.NewRequest(http.MethodDelete, "/posts/", nil)
+		req, err := http.NewRequest(http.MethodDelete, "/api/post/", nil)
 
 		assert.NoError(t, err)
 

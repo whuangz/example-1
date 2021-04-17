@@ -14,6 +14,7 @@ require (
 	github.com/golang-migrate/migrate/v4 v4.14.1 // indirect
 	github.com/golang/lint v0.0.0-20180702182130-06c8688daad7 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
+	github.com/google/uuid v1.1.2 // indirect
 	github.com/googleapis/gax-go v2.0.0+incompatible // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20180825215210-0210a2f0f73c // indirect
 	github.com/gotestyourself/gotestyourself v2.1.0+incompatible // indirect

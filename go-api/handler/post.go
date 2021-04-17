@@ -12,7 +12,7 @@ type postHandler struct {
 func NewPostHandler(router *gin.Engine, service domain.PostService) {
 	handler := &postHandler{service}
 
-	postGroup := router.Group("posts")
+	postGroup := router.Group("/api/post")
 	{
 		postGroup.GET("", handler.getPosts)
 		postGroup.POST("", handler.createPost)

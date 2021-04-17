@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/whuangz/go-example/go-api/domain"
-	"github.com/whuangz/go-example/go-api/mocks"
+	mocks "github.com/whuangz/go-example/go-api/mocks/post"
 	"github.com/whuangz/go-example/go-api/service"
 )
 
@@ -151,7 +151,6 @@ func TestFindById(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
-	mockRepo := new(mocks.MockPostRepo)
 	var id int32 = 1
 	mockUpdatePostParam := domain.Post{
 		Title:   "Update Test Mock 2",
@@ -159,6 +158,7 @@ func TestUpdate(t *testing.T) {
 	}
 
 	t.Run("Success", func(t *testing.T) {
+		mockRepo := new(mocks.MockPostRepo)
 
 		tempMockPost := mockUpdatePostParam
 
@@ -188,6 +188,8 @@ func TestUpdate(t *testing.T) {
 	})
 
 	t.Run("Failed", func(t *testing.T) {
+		mockRepo := new(mocks.MockPostRepo)
+
 		errResp := domain.NewNotFound("id", "not found")
 		tempMockPost := mockUpdatePostParam
 
@@ -196,23 +198,23 @@ func TestUpdate(t *testing.T) {
 			mock.AnythingOfType("int32"),
 			mock.AnythingOfType("*domain.Post"),
 		}
-		mockRepo.On("Update", mockArgs...).Return(errResp).Once()
+		mockRepo.On("Update", mockArgs...).Return(nil).Once()
 
 		ps := service.NewPostService(mockRepo)
 
 		ctx := context.TODO()
-		err := ps.Update(ctx, 1, &tempMockPost)
+		err := ps.Update(ctx, 0, &tempMockPost)
 
 		assert.Error(t, err)
 		assert.Equal(t, domain.Status(err), domain.Status(errResp))
-		mockRepo.AssertExpectations(t)
+		mockRepo.AssertNotCalled(t, "Update", mock.Anything, mock.Anything, mock.Anything)
 	})
 }
 
 func TestDelete(t *testing.T) {
-	mockRepo := new(mocks.MockPostRepo)
 
 	t.Run("Success", func(t *testing.T) {
+		mockRepo := new(mocks.MockPostRepo)
 
 		var id int32 = 1
 
@@ -233,20 +235,21 @@ func TestDelete(t *testing.T) {
 	})
 
 	t.Run("Failed", func(t *testing.T) {
+		mockRepo := new(mocks.MockPostRepo)
 
 		mockArgs := mock.Arguments{
-			mock.AnythingOfType("*context.emptyCtx"),
-			mock.AnythingOfType("int32"),
+			mock.Anything,
+			mock.Anything,
 		}
-		mockRepo.On("Delete", mockArgs...).Return(domain.NewNotFound("id", "not found")).Once()
+		mockRepo.On("Delete", mockArgs...).Return(nil).Once()
 
 		ps := service.NewPostService(mockRepo)
 
 		ctx := context.TODO()
-		err := ps.Delete(ctx, 1)
-		print(err)
+		err := ps.Delete(ctx, 0)
 
 		assert.Error(t, err)
-		mockRepo.AssertExpectations(t)
+		mockRepo.AssertNotCalled(t, "Delete", mock.Anything, mock.Anything)
+
 	})
 }

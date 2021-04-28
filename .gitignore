@@ -1,6 +1,5 @@
-./config/.env
+.env
 *.pem
-_*
 .DS_Store
-./server
-./tmp
+server
+tmp/

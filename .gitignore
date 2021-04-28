@@ -6,5 +6,5 @@
 
 .env.dev
 *.pem
-server
-tmp/
+/server
+*/bin/*

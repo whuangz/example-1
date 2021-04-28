@@ -3,6 +3,9 @@
 !*.c
 !*.*
 
-.env
+./config/.env
 *.pem
-tmp/*
+_*
+.DS_Store
+./server
+./tmp

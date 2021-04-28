@@ -5,17 +5,30 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/whuangz/go-example/go-api/domain"
+	"github.com/whuangz/go-example/go-api/middleware"
 )
 
 type accountHandler struct {
-	service domain.AccountService
+	service      domain.AccountService
+	tokenService domain.TokenService
 }
 
-func NewAccountHandler(router *gin.Engine, service domain.AccountService) {
-	h := &accountHandler{service: service}
+func NewAccountHandler(router *gin.Engine, service domain.AccountService, tokenService domain.TokenService) {
+	h := &accountHandler{service: service,
+		tokenService: tokenService}
 
 	accountGroup := router.Group("/api/account")
-	{
+	if gin.Mode() != gin.TestMode {
+		//accountGroup.Use(middleware.Timeout(time.Duration(config.HANDLER_TIMEOUT), domain.NewServiceUnavailable()))
+		accountGroup.GET("/me", middleware.AuthUser(tokenService), h.Me)
+		accountGroup.POST("/signup", h.Signup)
+		accountGroup.POST("/signin", h.Signin)
+		accountGroup.POST("/signout", h.Signout)
+		accountGroup.POST("/tokens", h.Tokens)
+		accountGroup.POST("/image", h.Image)
+		accountGroup.DELETE("/image", h.DeleteImage)
+		accountGroup.PUT("/details", h.Details)
+	} else {
 		accountGroup.GET("/me", h.Me)
 		accountGroup.POST("/signup", h.Signup)
 		accountGroup.POST("/signin", h.Signin)
@@ -25,6 +38,7 @@ func NewAccountHandler(router *gin.Engine, service domain.AccountService) {
 		accountGroup.DELETE("/image", h.DeleteImage)
 		accountGroup.PUT("/details", h.Details)
 	}
+
 }
 
 // Me handler calls services for getting
@@ -43,7 +57,8 @@ func (h *accountHandler) Me(c *gin.Context) {
 
 	uid := account.(*domain.Account).UID
 
-	a, err := h.service.Get(c, uid)
+	ctx := c.Request.Context()
+	a, err := h.service.Get(ctx, uid)
 
 	if err != nil {
 		e := domain.NewNotFound("account", uid.String())
@@ -72,7 +87,8 @@ func (h *accountHandler) Signup(c *gin.Context) {
 		Password: req.Password,
 	}
 
-	err := h.service.Signup(c, a)
+	ctx := c.Request.Context()
+	err := h.service.Signup(ctx, a)
 
 	if err != nil {
 		c.JSON(domain.Status(err), gin.H{
@@ -81,16 +97,53 @@ func (h *accountHandler) Signup(c *gin.Context) {
 		return
 	}
 
+	token, err := h.tokenService.NewPairFromUser(ctx, a, "")
+	if err != nil {
+		c.JSON(domain.Status(err), gin.H{
+			"error": err,
+		})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{
-		"data": "success",
+		"data": token,
 	})
 }
 
 // Signin handler
 func (h *accountHandler) Signin(c *gin.Context) {
+	var req signInReq
+	if ok := bindData(c, &req); !ok {
+		return
+	}
+
+	a := &domain.Account{
+		Email:    req.Email,
+		Password: req.Password,
+	}
+
+	ctx := c.Request.Context()
+	err := h.service.Signin(ctx, a)
+
+	if err != nil {
+		c.JSON(domain.Status(err), gin.H{
+			"error": err,
+		})
+		return
+	}
+
+	tokens, err := h.tokenService.NewPairFromUser(ctx, a, "")
+	if err != nil {
+		c.JSON(domain.Status(err), gin.H{
+			"error": err,
+		})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{
-		"hello": "it's signin",
+		"data": tokens,
 	})
+
 }
 
 // Signout handler

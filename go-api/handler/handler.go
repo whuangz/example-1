@@ -10,14 +10,6 @@ import (
 	"github.com/whuangz/go-example/go-api/domain"
 )
 
-// used to help extract validation errors
-type invalidArgument struct {
-	Field string `json:"field"`
-	Value string `json:"value"`
-	Tag   string `json:"tag"`
-	Param string `json:"param"`
-}
-
 func getPathInt(c *gin.Context, name string) (int, bool) {
 	val := c.Params.ByName(name)
 	r, err := strconv.Atoi(val)
@@ -50,10 +42,10 @@ func bindData(c *gin.Context, req interface{}) bool {
 
 		if errs, ok := err.(validator.ValidationErrors); ok {
 			// could probably extract this, it is also in middleware_auth_user
-			var invalidArgs []invalidArgument
+			var invalidArgs []domain.InvalidArgument
 
 			for _, err := range errs {
-				invalidArgs = append(invalidArgs, invalidArgument{
+				invalidArgs = append(invalidArgs, domain.InvalidArgument{
 					err.Field(),
 					err.Value().(string),
 					err.Tag(),

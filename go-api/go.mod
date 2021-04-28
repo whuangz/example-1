@@ -7,9 +7,11 @@ require (
 	git.apache.org/thrift.git v0.0.0-20180807212849-6e67faa92827 // indirect
 	github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973 // indirect
 	github.com/cznic/ql v1.2.0 // indirect
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/gin-gonic/gin v1.6.3 // indirect
 	github.com/go-ini/ini v1.38.2 // indirect
 	github.com/go-playground/validator/v10 v10.4.1 // indirect
+	github.com/go-redis/redis/v8 v8.8.2 // indirect
 	github.com/go-sql-driver/mysql v1.5.0 // indirect
 	github.com/golang-migrate/migrate/v4 v4.14.1 // indirect
 	github.com/golang/lint v0.0.0-20180702182130-06c8688daad7 // indirect

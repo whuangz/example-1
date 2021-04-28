@@ -53,3 +53,19 @@ func (m *MockAccountService) Signup(ctx context.Context, a *domain.Account) erro
 	}
 	return r0
 }
+
+func (m *MockAccountService) Signin(ctx context.Context, a *domain.Account) error {
+
+	ret := m.Called(ctx, a)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, *domain.Account) error); ok {
+		r0 = rf(ctx, a)
+	} else {
+		if ret.Get(0) != nil {
+			// we can just return this if we know we won't be passing function to "Return"
+			r0 = ret.Get(0).(error)
+		}
+	}
+	return r0
+}

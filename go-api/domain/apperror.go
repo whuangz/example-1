@@ -29,6 +29,14 @@ type Error struct {
 	Message string `json:"message"`
 }
 
+// used to help extract validation errors
+type InvalidArgument struct {
+	Field string `json:"field"`
+	Value string `json:"value"`
+	Tag   string `json:"tag"`
+	Param string `json:"param"`
+}
+
 // Error satisfies standard error interface
 // we can return errors from this package as
 // a regular old go _error_

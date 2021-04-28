@@ -12,12 +12,15 @@ services:
       - ./go-api:/usr/app
     depends_on: 
         - go-api-db
+        - go-api-redis-account
     env_file: 
         - ./go-api/config/.env
   go-api-db:
     image: mysql/mysql-server
     container_name: go-api-db
     environment: 
+      MYSQL_ROOT: root
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: notSuperUser
       MYSQL_PASSWORD: 123456
       MYSQL_DATABASE: go-api
@@ -26,6 +29,16 @@ services:
     ports: 
       - "3306:3306"
 
+  go-api-redis-account:
+    container_name: go-api-redis-account
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+    volumes:
+      - "go-api-redis-account-volume:/data"
+
 volumes: 
   go_api_volume:
     name: go_api_volume
+  go-api-redis-account-volume:
+    name: go-api-redis-account-volume

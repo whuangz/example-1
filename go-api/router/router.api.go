@@ -2,6 +2,7 @@ package router
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -10,6 +11,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis/v8"
 	"github.com/jmoiron/sqlx"
 	"github.com/whuangz/go-example/go-api/config"
 	"github.com/whuangz/go-example/go-api/helpers/db"
@@ -17,8 +19,9 @@ import (
 )
 
 var (
-	router   *gin.Engine
-	database *sqlx.DB
+	router      *gin.Engine
+	database    *sqlx.DB
+	redisClient *redis.Client
 )
 
 func init() {
@@ -30,6 +33,32 @@ func init() {
 	err := database.Ping()
 	if err != nil {
 		log.Fatal("Database Open Connection: ", err)
+	}
+
+	log.Printf("Connecting to Redis\n")
+	redisClient = redis.NewClient(&redis.Options{
+		Addr:     fmt.Sprintf("%s:%s", config.REDIS_HOST, config.REDIS_PORT),
+		Password: "",
+		DB:       0,
+	})
+
+	// verify redis connection
+	_, err = redisClient.Ping(context.Background()).Result()
+	if err != nil {
+		log.Fatalf("error connecting to redis: %v", err)
+	}
+
+}
+
+func close() {
+
+	err := database.Close()
+	if err != nil {
+		log.Fatal("Database Close Connection: ", err)
+	}
+	err = redisClient.Close()
+	if err != nil {
+		log.Fatal("error closing Redis Client: ", err)
 	}
 
 }

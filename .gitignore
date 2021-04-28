@@ -1,4 +1,10 @@
+# Unignore all with extensions
+!*.*
+
+# Unignore all dirs
+!*/
+
 .env.dev
 *.pem
 server
-tmp
+tmp/

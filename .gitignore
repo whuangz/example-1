@@ -1,10 +1,9 @@
 # Unignore all with extensions
+*
+!*.c
 !*.*
-
-# Unignore all dirs
-!*/
 
 .env.dev
 *.pem
-/server
-*/bin/*
+server
+*/tmp/*
